@@ -1,120 +1,85 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
+
 
 namespace Zork
 {
-    public class Game : INotifyPropertyChanged
+
+    public class Game
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public World World { get; private set; }
-
-        public string StartingLocation { get; set; }
-        
-        public string WelcomeMessage { get; set; }
-        
-        public string ExitMessage { get; set; }
-
-        public IOutputService Output { get; set; }
 
         [JsonIgnore]
         public Player Player { get; private set; }
 
+        [JsonIgnore]
         private bool IsRunning { get; set; }
 
-        [JsonIgnore]
-        public Dictionary<string, Command> Commands { get; private set; }
+        public IOutputService Output { get; set; }
 
         public Game(World world, Player player)
         {
             World = world;
             Player = player;
-
-            Commands = new Dictionary<string, Command>()
-            {
-                { "QUIT", new Command("QUIT", new string[] { "QUIT", "Q", "BYE" }, Quit) },
-                { "LOOK", new Command("LOOK", new string[] { "LOOK", "L" }, Look) },
-                { "NORTH", new Command("NORTH", new string[] { "NORTH", "N" }, game => Move(game, Directions.North)) },
-                { "SOUTH", new Command("SOUTH", new string[] { "SOUTH", "S" }, game => Move(game, Directions.South)) },
-                { "EAST", new Command("EAST", new string[] { "EAST", "E"}, game => Move(game, Directions.East)) },
-                { "WEST", new Command("WEST", new string[] { "WEST", "W" }, game => Move(game, Directions.West)) },
-            };
         }
 
         public void Run()
         {
-            Console.WriteLine(string.IsNullOrWhiteSpace(WelcomeMessage) ? "Welcome to Zork!" : WelcomeMessage);
-
             IsRunning = true;
             Room previousRoom = null;
             while (IsRunning)
             {
-                Console.WriteLine(Player.Location);
+                Output.WriteLine(Player.Location);
                 if (previousRoom != Player.Location)
                 {
-                    Look(this);
+                    Output.WriteLine(Player.Location.Description);
                     previousRoom = Player.Location;
                 }
 
-                Console.Write("\n> ");
-                string commandString = Console.ReadLine().Trim().ToUpper();
-                Command foundCommand = null;
-                foreach (Command command in Commands.Values)
+                Output.Write("\n>");
+                Commands command = ToCommand(Console.ReadLine().Trim());
+
+                switch (command)
                 {
-                    if (command.Verbs.Contains(commandString))
-                    {
-                        foundCommand = command;
+                    case Commands.QUIT:
+                        IsRunning = false;
                         break;
-                    }
-                }
 
-                if (foundCommand != null)
-                {
-                    foundCommand.Action(this);
-                }
-                else
-                {
-                    Console.WriteLine("Unknown command.");
+                    case Commands.LOOK:
+                        Output.WriteLine(Player.Location.Description);
+                        break;
+
+                    case Commands.NORTH:
+                    case Commands.SOUTH:
+                    case Commands.EAST:
+                    case Commands.WEST:
+                        Directions direction = (Directions)command;
+                        if (Player.Move(direction) == false)
+                        {
+                            Output.WriteLine("The way is shut!");
+                        }
+                        break;
+
+                    default:
+                        Output.WriteLine("Unknown Command.");
+                        break;
+                
                 }
             }
-
-            Console.WriteLine(string.IsNullOrWhiteSpace(ExitMessage) ? "Thank you for playing!" : ExitMessage);
         }
 
-        private static void Move(Game game, Directions direction)
-        {
-            if (game.Player.Move(direction) == false)
-            {
-                Console.WriteLine("The way is shut!");
-            }
-        }
-
-        private static void Look(Game game) => Console.WriteLine(game.Player.Location.Description);
-
-        private static void Quit(Game game) => game.IsRunning = false;
-
-        [OnDeserialized]
-        private void OnDeserialized(StreamingContext context) => Player = new Player(World, StartingLocation);
-
-        public static Game Load(string filename, IOutputService output)          //in class 11/8/21
+        public static Game Load(string filename, IOutputService output)
         {
 
             Game game = JsonConvert.DeserializeObject<Game>(File.ReadAllText(filename));
-            game.Player = new Player(game.World, game.StartingLocation);
+            game.Player = game.World.SpawnPlayer();
             game.Output = output;
+
             return game;
         }
-
-
+        private static Commands ToCommand(string commandString) => Enum.TryParse<Commands>(commandString, true, out Commands result) ? result : Commands.UNKNOWN;
 
     }
-
-
-
-
 }
+

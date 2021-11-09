@@ -44,6 +44,10 @@
         "netstandard2.0": {
           "targetAlias": "netstandard2.0",
           "dependencies": {
+            "Microsoft.CodeAnalysis.CSharp.Scripting": {
+              "target": "Package",
+              "version": "[3.11.0, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",
@@ -52,11 +56,7 @@
             },
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[12.0.3, )"
-            },
-            "PropertyChanged.Fody": {
-              "target": "Package",
-              "version": "[3.2.10, )"
+              "version": "[13.0.1, )"
             }
           },
           "imports": [

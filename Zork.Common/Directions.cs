@@ -1,12 +1,13 @@
 ﻿namespace Zork
 {
-    public enum Directions
+
+
+    public enum Directions //moved from player.cs
     {
-        North,
-        South,
-        East,
-        West,
-        Up,
-        Down
-    } 
+        North = Commands.NORTH,
+        South = Commands.SOUTH,
+        East = Commands.EAST,
+        West = Commands.WEST
+
+    }
 }

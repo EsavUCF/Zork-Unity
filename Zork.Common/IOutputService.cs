@@ -1,4 +1,5 @@
 ﻿
+
 namespace Zork
 {
     public interface IOutputService
@@ -6,6 +7,5 @@ namespace Zork
         void Write(object value);
 
         void WriteLine(object value);
-
     }
 }
