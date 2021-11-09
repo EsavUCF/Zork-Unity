@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -18,6 +19,8 @@ namespace Zork
         public string WelcomeMessage { get; set; }
         
         public string ExitMessage { get; set; }
+
+        public IOutputService Output { get; set; }
 
         [JsonIgnore]
         public Player Player { get; private set; }
@@ -97,5 +100,21 @@ namespace Zork
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context) => Player = new Player(World, StartingLocation);
+
+        public static Game Load(string filename, IOutputService output)          //in class 11/8/21
+        {
+
+            Game game = JsonConvert.DeserializeObject<Game>(File.ReadAllText(filename));
+            game.Player = new Player(game.World, game.StartingLocation);
+            game.Output = output;
+            return game;
+        }
+
+
+
     }
+
+
+
+
 }
