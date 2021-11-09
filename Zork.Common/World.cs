@@ -9,7 +9,7 @@ namespace Zork
 {
     public class World
     {
-        [JsonIgnore]
+        //removed jsonignore as it caused unhandled errors.
         public List<Room> Rooms { get; set; }
 
         [JsonIgnore]
