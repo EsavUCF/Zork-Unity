@@ -18,6 +18,7 @@ namespace Zork
 
         public IOutputService Output { get; set; }
 
+
         public Game(World world, Player player)
         {
             World = world;
@@ -38,6 +39,7 @@ namespace Zork
                 }
 
                 Output.Write("\n>");
+                //string commandString = Console.ReadLine().Trim().ToUpper(); replace 2:38
                 Commands command = ToCommand(Console.ReadLine().Trim());
 
                 switch (command)
