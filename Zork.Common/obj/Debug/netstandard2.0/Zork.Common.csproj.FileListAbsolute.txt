@@ -68,3 +68,6 @@ C:\Users\cire3\Documents\GitHub\Zork-Unity\Zork.Common\obj\Debug\netstandard2.0\
 C:\Users\cire3\Documents\GitHub\Zork-Unity\Zork.Common\obj\Debug\netstandard2.0\Zork.Common.csproj.CoreCompileInputs.cache
 C:\Users\cire3\Documents\GitHub\Zork-Unity\Zork.Common\obj\Debug\netstandard2.0\Zork.Common.dll
 C:\Users\cire3\Documents\GitHub\Zork-Unity\Zork.Common\obj\Debug\netstandard2.0\Zork.Common.pdb
+C:\Users\cire3\Documents\GitHub\Zork-Unity\Zork.Unity\Assets\netstandard2.0\Zork.Common.deps.json
+C:\Users\cire3\Documents\GitHub\Zork-Unity\Zork.Unity\Assets\netstandard2.0\Zork.Common.dll
+C:\Users\cire3\Documents\GitHub\Zork-Unity\Zork.Unity\Assets\netstandard2.0\Zork.Common.pdb
